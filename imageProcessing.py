@@ -4,7 +4,7 @@ tf.enable_eager_execution()
 
 class imageProcessing:
 	def __init__(self):
-		self.path = "/Users/BrandonFung/MTGDS"
+		self.path = ""
 		self.HEIGHT = 220
 		self.WIDTH = 220
 		self.numExp = 0
