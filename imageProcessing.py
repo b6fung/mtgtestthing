@@ -1,11 +1,12 @@
 import pathlib
 import tensorflow as tf
 tf.enable_eager_execution()
+
 class imageProcessing:
 	def __init__(self):
 		self.path = "/Users/BrandonFung/MTGDS"
-		self.HEIGHT = 160
-		self.WIDTH = 160
+		self.HEIGHT = 220
+		self.WIDTH = 220
 		self.numExp = 0
 
 	def _loadImages(self, path):
