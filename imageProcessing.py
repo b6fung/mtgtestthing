@@ -4,9 +4,9 @@ tf.enable_eager_execution()
 
 class imageProcessing:
 	def __init__(self):
-		self.path = ""
-		self.HEIGHT = 220
-		self.WIDTH = 220
+		self.path = "/Users/BrandonFung/MTGDS"
+		self.HEIGHT = 224
+		self.WIDTH = 224
 		self.numExp = 0
 
 	def _loadImages(self, path):

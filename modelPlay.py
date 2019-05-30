@@ -1,6 +1,6 @@
 import tensorflow as tf
 from tensorflow import contrib
-from tqdm import tqdm
+# from tqdm import tqdm
 tfe = contrib.eager
 # import sciki
 from imageProcessing import imageProcessing
@@ -12,14 +12,17 @@ for layer in baseModel.layers[:100]:
 	layer.trainable = False
 # baseModel.trainable = False
 
+
 glob2D = tf.keras.layers.GlobalAveragePooling2D()
 predLay = tf.keras.layers.Dense(1)
 
-num_epoch = 20
+num_epoch = 5
 BATCH_SIZE = 10
 dataObj = imageProcessing()
+testImage = imageProcessing.path + "/test/IMG_1295.JPG"
+tImg = dataObj.loadProcessImage(testImage)
 dataSetTrain = dataObj.buildData("train")
-dataSetTrain = dataSetTrain.repeat().shuffle(164)
+dataSetTrain = dataSetTrain.shuffle(300)
 # dataSetTrain = dataSetTrain.shuffle(buffer_size = dataObj.numExp)
 dataSetTrain = dataSetTrain.batch(BATCH_SIZE)
 # dataSetTest = dataObj.buildData("test")
@@ -43,18 +46,24 @@ def grad(moded, input, target):
 optimizer = tf.train.RMSPropOptimizer(learning_rate=0.0001)
 step = tf.Variable(0)
 
-for epoch in range(num_epoch):
+def evalRes(modelOut):
+	return tf.cast(tf.math.greater(modelOut, 0),tf.int64)
+
+for epoch in range(5):
 	epoch_acc = tfe.metrics.Accuracy()
 	print epoch
-	for x, y in dataSetTrain:
+	for x,y in dataSetTrain:
 		loss_val, grads = grad(model, x, y)
-		optimizer.apply_gradients(zip(grads, model.trainable_variables), step)
-		if epoch > 4:
-			print model(x)
-			print y
-		epoch_acc(tf.argmax(model(x), axis=1, output_type=tf.int64), y)
-		# print epoch_acc.result()
 
+		optimizer.apply_gradients(zip(grads, model.trainable_variables), step)
+		# print tf.transpose(tf.cast(tf.math.greater(model(x), 0),tf.int64))
+	
+		# epoch_acc(tf.cast(tf.math.greater(model(x), 0),tf.int64), tf.expand_dims(y, axis=1))
+		# print tf.expand_dims(y, axis=1)
+		# print epoch_acc.result()
+	break
+tImg=tf.expand_dims(tImg, axis=0)
+print evalRes(model(tImg))
 
 
 # printNode = tf.Print(predLay, [tf.shape(predLay)])
